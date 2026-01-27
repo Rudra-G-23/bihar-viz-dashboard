@@ -1,0 +1,15 @@
+[project]
+name = "bihar-viz-dashboard"
+version = "0.1.0"
+description = "Visualize the Bihar dataset using Plotly and streamlit"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "nbformat>=4.2.0",
+    "numpy>=2.4.1",
+    "pandas>=2.3.3",
+    "pathlib>=1.0.1",
+    "plotly>=6.5.2",
+    "polars>=1.37.1",
+    "streamlit>=1.53.1",
+]
