@@ -5,6 +5,7 @@ description = "Visualize the Bihar dataset using Plotly and streamlit"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "kaleido>=1.2.0",
     "nbformat>=4.2.0",
     "numpy>=2.4.1",
     "pandas>=2.3.3",
