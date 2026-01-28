@@ -22,6 +22,51 @@ df = load_data()
 
 fdf = df.clone()
 
+with st.sidebar:
+    on = st.toggle("Activate Filter Options")
+    if on:
+        with st.expander("Filters", expanded=True):
+            
+            def select(col_name):
+                return st.selectbox(
+                    col_name,
+                    options=["All"] + sorted(df[col_name].unique().to_list())
+                )
+                
+            FSU_Serial_No = select("FSU_Serial_No")
+            Sector = select("Sector")
+            NSS_Region = select("NSS_Region")
+            District = select("District")
+            Stratum = select("Stratum")
+            Sub_stratum = select("Sub_stratum")
+            Panel = select("Panel")
+            Sub_sample = select("Sub_sample")
+            FOD_Sub_Region = select("FOD_Sub_Region")
+            Sample_SU_No = select("Sample_SU_No")
+            # Sample_Sub_Division_No = select("Sample_Sub_Division_No")
+            # Second_Stage_Stratum_No = select("Second_Stage_Stratum_No")
+            Sample_Household_No = select("Sample_Household_No")
+        
+            filter_map = {
+                "FSU_Serial_No": FSU_Serial_No,
+                "Sector": Sector,
+                "NSS_Region": NSS_Region,
+                "District": District,
+                "Stratum": Stratum,
+                "Sub_stratum": Sub_stratum,
+                "Panel": Panel,
+                "Sub_sample": Sub_sample,
+                "FOD_Sub_Region": FOD_Sub_Region,
+                "Sample_SU_No": Sample_SU_No,
+                # "Sample_Sub_Division_No": Sample_Sub_Division_No,
+                # "Second_Stage_Stratum_No": Second_Stage_Stratum_No,
+                "Sample_Household_No": Sample_Household_No,
+            }
+            
+            for col, val in filter_map.items():
+                if val != "All":
+                    fdf = fdf.filter(pl.col(col) == val)
+
 
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(
     ["Statistic", "Year of Edu.", "Internet Used",
@@ -32,6 +77,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(
 with tab1:
     with st.spinner("Statistic  Dataframe Loading..."):
         st.subheader("Statistical Summary")
+        st.write(f"Data contains: {fdf.shape[0]}")
         st.dataframe(fdf.describe().to_pandas().T)
         st.write("---")
         st.subheader("Dataframe")
