@@ -8,6 +8,7 @@ path = Path("data") / "BL02.parquet"
 
 st.set_page_config(
     page_title="Level 02",
+    layout="wide"
 )
 
 st.title("Level 02")
@@ -23,23 +24,19 @@ fdf = df.clone()
 
 
 tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(
-    ["Gender", "Year of Edu.", "Internet Used",
+    ["Statistic", "Year of Edu.", "Internet Used",
      "Age", "Education Level", "Marital Status",
-     "Relation to Head", "Data Frame"]   
+     "Relation to Head", "Gender"]   
 )
 
 with tab1:
-    with st.spinner("Gender Graph Loading..."):
-        fig = px.pie(
-            fdf['Gender_label'].value_counts(),
-            values='count',
-            names='Gender_label',
-            title="Gender Pie Chart"
-        )
+    with st.spinner("Statistic  Dataframe Loading..."):
+        st.subheader("Statistical Summary")
+        st.dataframe(fdf.describe().to_pandas().T)
+        st.write("---")
+        st.subheader("Dataframe")
+        st.dataframe(fdf.head(50))
 
-        fig.update_layout(showlegend=True)
-
-        st.plotly_chart(fig)
 
 with tab2:
     with st.spinner("Year of Education Loading..."): 
@@ -192,6 +189,15 @@ with tab7:
     st.plotly_chart(fig)
     
 with tab8:
-    st.dataframe(fdf)    
+        fig = px.pie(
+            fdf['Gender_label'].value_counts(),
+            values='count',
+            names='Gender_label',
+            title="Gender Pie Chart"
+        )
+
+        fig.update_layout(showlegend=True)
+
+        st.plotly_chart(fig)
 
 

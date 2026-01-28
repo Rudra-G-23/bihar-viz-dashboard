@@ -2,12 +2,15 @@ import streamlit as st
 from pathlib import Path
 import base64
 
-st.set_page_config(page_title="Level 01")
+st.set_page_config(
+    page_title="Level 01",
+    layout="wide"
+)
 
 st.title("Level 01")
 st.subheader("HCES DATA STORY")
 
-PDF_PATH = Path("reports/HCES-DATA-STORY.pdf")
+PDF_PATH = Path("assets/reports/HCES-DATA-STORY.pdf")
 
 if not PDF_PATH.exists():
     st.error("PDF file not found.")
@@ -21,7 +24,7 @@ else:
         <iframe
             src="data:application/pdf;base64,{b64_pdf}"
             width="100%"
-            height="500"
+            height="600"
             style="border: none;"
         ></iframe>
     """
