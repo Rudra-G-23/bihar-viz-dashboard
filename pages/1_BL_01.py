@@ -12,25 +12,28 @@ st.subheader("HCES DATA STORY")
 
 PDF_PATH = Path("assets/reports/HCES-DATA-STORY.pdf")
 
+ic1, ic2 = st.columns(2)
+with ic1:
+    st.image("assets/pic/hh-data-story/hces-data-story.png", caption="HCES DATA STORY")
+    st.image("assets/pic/hh-data-story/survey-hierarchy.png", caption="Survey Hierarchy")
+
+with ic2:
+    st.image("assets/pic/hh-data-story/experiment.png", caption="Experiment Bihar Data")
+    st.image("assets/pic/hh-data-story/item-code-level.png", caption="What is the issues")
+
 if not PDF_PATH.exists():
     st.error("PDF file not found.")
 else:
     with open(PDF_PATH, "rb") as f:
         pdf_bytes = f.read()
 
-    b64_pdf = base64.b64encode(pdf_bytes).decode("utf-8")
-
-    pdf_display = f"""
-        <iframe
-            src="data:application/pdf;base64,{b64_pdf}"
-            width="100%"
-            height="600"
-            style="border: none;"
-        ></iframe>
-    """
-
-    st.markdown(pdf_display, unsafe_allow_html=True)
-
+    st.download_button(
+        label="📄 Open PDF",
+        data=pdf_bytes,
+        file_name="HCES-DATA-STORY.pdf",
+        mime="application/pdf"
+    )
+    
 st.write('---')
 st.subheader("Survey Identification")
 
