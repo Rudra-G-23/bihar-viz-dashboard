@@ -12,5 +12,6 @@ dependencies = [
     "pathlib>=1.0.1",
     "plotly>=6.5.2",
     "polars>=1.37.1",
+    "scikit-learn>=1.8.0",
     "streamlit>=1.53.1",
 ]

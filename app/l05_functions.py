@@ -92,7 +92,25 @@ def total_consumption_value_by_category(cat_df):
         orientation="h",
         title="Total Consumption Value by Category"
     )  
+
+def out_of_home_consumption_qty_by_category(cat_df):
+    return px.bar(
+        cat_df.sort('out_home_qty'),
+        x="out_home_qty",
+        y="category_mapped",
+        orientation="h",
+        title="Out of Home Consumption Quantity by Category"
+    )
     
+def out_of_home_consumption_value_by_category(cat_df):
+    return px.bar(
+        cat_df.sort('out_home_value'),
+        x="out_home_value",
+        y="category_mapped",
+        orientation="h",
+        title="Out of Home Consumption Value by Category"
+    )  
+          
 def distribution_of_metric_by_categories(
     df ,
     cols = [
@@ -144,7 +162,10 @@ def total_qty_vs_total_value_by_category(df):
         labels={
             "total_qty": "Total Quantity",
             "total_value": "Total Value"
-        }
+        },
+        hover_name="category_mapped",
+        size="total_value",
+        size_max=30
     )
 
 def total_qty_vs_avg_price_by_category(df):
@@ -153,7 +174,37 @@ def total_qty_vs_avg_price_by_category(df):
         x="total_qty",
         y="total_avg_pice",
         color="category_mapped",
-        title="Total Quantity vs Average Price by Category"
+        symbol="category_mapped",
+        title="Total Quantity vs Average Price by Category",
+        hover_name="category_mapped",
+        size="total_avg_pice",
+        size_max=30
+    )
+
+def out_of_home_qty_vs_out_of_home_value_by_category(df):
+    return px.scatter(
+        df,
+        x="out_home_qty",
+        y="out_home_value",
+        color="category_mapped",
+        symbol="category_mapped",
+        title="Out of Home Quantity vs Out of Home Value by Category",
+        hover_name="category_mapped",
+        size="out_home_value",
+        size_max=30
+    )
+
+def out_of_home_qty_vs_out_of_home_avg_price_by_category(df):
+    return px.scatter(
+        df,
+        x="out_home_qty",
+        y="out_of_home_avg_pice",
+        color="category_mapped",
+        symbol="category_mapped",
+        title="Total Quantity vs Average Price by Category",
+        hover_name="category_mapped",
+        size="out_of_home_avg_pice",
+        size_max=30
     )
 
 def group_bar_chart_qty_type(df):
@@ -200,17 +251,29 @@ def out_of_home_vs_total_value_stack_graph(val_df):
         title="Out-of-Home vs Total Consumption Value"
     )
 
-def consumption_pattern_by_category(df):
+def total_consumption_pattern_by_category(df):
     return px.scatter(
         df,
         x="total_qty",
         y="total_value",
         size="total_avg_pice",
         color="category_mapped",
-        title="Consumption Pattern by Category",
-        size_max=40
+        symbol="category_mapped",
+        title="Total Consumption Pattern by Category",
+        size_max=20
     )
-
+    
+def out_of_home_consumption_pattern_by_category(df):
+    return px.scatter(
+        df,
+        x="out_home_qty",
+        y="out_home_value",
+        size="out_of_home_avg_pice",
+        color="category_mapped",
+        symbol="category_mapped",
+        title="Average Out of Home Consumption Pattern by Category",
+        size_max=20
+    )
    
 def category_mapping():
     return {
