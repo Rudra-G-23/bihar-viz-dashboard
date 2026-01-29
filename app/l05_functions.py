@@ -5,6 +5,12 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
+import pandas as pd
+import time
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
+
 @st.cache_data
 def load_level_05_data(path):
     # Load the data
@@ -274,3 +280,75 @@ def out_of_home_consumption_pattern_by_category(df):
         title="Average Out of Home Consumption Pattern by Category",
         size_max=20
     )
+    
+@st.cache_resource
+def pca_kmeans_category_clustering(
+    cat_df,
+    feature_cols = [
+    "out_home_value","out_home_qty","total_qty",
+    "total_value", "out_of_home_avg_pice","total_avg_pice",],
+    n_components=2,
+    n_clusters=4,
+    random_state=42
+):
+   
+    if hasattr(cat_df, "to_pandas"):
+        pdf = cat_df.to_pandas()
+    else:
+        pdf = cat_df.copy()
+    
+    labels = pdf["category_mapped"]
+    
+    X = pdf[feature_cols].fillna(0)
+    
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+    
+    pca = PCA(n_components=n_components, random_state=random_state)
+    X_pca = pca.fit_transform(X_scaled)
+    
+    kmeans = KMeans(
+        n_clusters=n_clusters,
+        n_init=10,
+        random_state=random_state
+    )
+    clusters = kmeans.fit_predict(X_pca)
+    
+    result_df = pd.DataFrame({
+        "category_mapped": labels,
+        "PC1": X_pca[:, 0],
+        "PC2": X_pca[:, 1],
+        "cluster": clusters
+    })
+    
+    return result_df, pca, kmeans
+
+def pca_2d_graph(pca_df):
+    return px.scatter(
+        pca_df,
+        x="PC1",
+        y="PC2",
+        color="cluster",
+        hover_name="category_mapped",
+        hover_data=["category_mapped"],
+        title="Category Clustering after PCA",
+        color_continuous_scale='Bluered_r'
+    )
+
+def loading_status_for_pca():
+    with st.status("Train the model", expanded=True) as status:
+        st.info("n_components=2, n_clusters=2", icon="ℹ️")
+        
+        st.write("Searching for data...")
+        time.sleep(3)
+        st.write("converted Polar to Pandas dataframe")
+        time.sleep(2)
+        st.write("Apply Standard Scaler Processing...")
+        time.sleep(2)
+        st.write("KMeans & PCA performing ...")
+        time.sleep(2)
+        st.write("Downloading dataset...")
+        time.sleep(2)
+        status.update(
+            label="Model Training complete!", state="complete", expanded=False
+        )

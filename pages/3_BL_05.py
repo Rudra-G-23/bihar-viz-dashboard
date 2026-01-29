@@ -1,9 +1,12 @@
+import time
 import streamlit as st
 from pathlib import Path
 
 from app.l05_functions import(
+    
     load_level_05_data,
     category_dict_to_dataframe,
+    
     total_consumption_qty_by_category,
     total_consumption_value_by_category,
     out_of_home_consumption_qty_by_category,
@@ -23,7 +26,11 @@ from app.l05_functions import(
     out_of_home_vs_total_value_stack_graph,
     
     total_consumption_pattern_by_category,
-    out_of_home_consumption_pattern_by_category
+    out_of_home_consumption_pattern_by_category,
+    
+    pca_kmeans_category_clustering,
+    pca_2d_graph,
+    loading_status_for_pca
 )
 
 from app.l05_categories import (  
@@ -83,9 +90,10 @@ category_fn = CATEGORY_FN_MAP[selected_category]
 category_dict = category_fn()
 cat_df = category_dict_to_dataframe(category_dict, fdf)
 
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
-    "Statistical", "Consumption", "Distribution",
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+    "Statistic", "Consumption", "Distribution",
     "Qty, Value by Category", "Category", "Avg Qty, Value by Category", 
+    "PCA by Category"
 ])
 
 with tab1:
@@ -187,3 +195,13 @@ with tab6:
     with tb6_c2:
         fig9 = out_of_home_consumption_pattern_by_category(cat_df)
         st.plotly_chart(fig9)
+
+with tab7:
+    st.subheader("Category Clustering after PCA")
+    
+    loading_status_for_pca()
+        
+    pca_df, _, _ = pca_kmeans_category_clustering(cat_df)
+    
+    fig10 = pca_2d_graph(pca_df)
+    st.plotly_chart(fig10)
