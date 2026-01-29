@@ -23,8 +23,10 @@ from app.l05_functions import(
     out_of_home_vs_total_value_stack_graph,
     
     total_consumption_pattern_by_category,
-    out_of_home_consumption_pattern_by_category,
-    
+    out_of_home_consumption_pattern_by_category
+)
+
+from app.l05_categories import (  
     category_mapping,
     cereal_mapping,
     pulses_mapping,
