@@ -25,7 +25,7 @@ else:
         mime="application/pdf" 
     )
 
-
-st.image("assets/pic/household-level.png", caption="Household Level Data and Person Level Data")
-st.image("assets/pic/item-level.png", caption="Item Level Data")
-st.image("assets/pic/single-merge-dataset.png", caption="Single Merge Dataset")
+with st.expander("🖼️ Efficient way to merge", expanded=True):
+    st.image("assets/pic/household-level.png", caption="Household Level Data and Person Level Data")
+    st.image("assets/pic/item-level.png", caption="Item Level Data")
+    st.image("assets/pic/single-merge-dataset.png", caption="Single Merge Dataset")
