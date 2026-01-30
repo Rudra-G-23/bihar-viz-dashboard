@@ -10,17 +10,7 @@ st.set_page_config(
 st.title("Level 01")
 st.subheader("HCES DATA STORY")
 
-PDF_PATH = Path("assets/reports/HCES-DATA-STORY.pdf")
-
-ic1, ic2 = st.columns(2)
-with ic1:
-    st.image("assets/pic/hh-data-story/hces-data-story.png", caption="HCES DATA STORY")
-    st.image("assets/pic/hh-data-story/survey-hierarchy.png", caption="Survey Hierarchy")
-
-with ic2:
-    st.image("assets/pic/hh-data-story/experiment.png", caption="Experiment Bihar Data")
-    st.image("assets/pic/hh-data-story/item-code-level.png", caption="What is the issues")
-
+PDF_PATH = Path("reports/HCES-DATA-STORY.pdf")
 if not PDF_PATH.exists():
     st.error("PDF file not found.")
 else:
@@ -33,6 +23,16 @@ else:
         file_name="HCES-DATA-STORY.pdf",
         mime="application/pdf"
     )
+    
+ic1, ic2 = st.columns(2)
+with ic1:
+    st.image("assets/pic/hh-data-story/hces-data-story.png", caption="HCES DATA STORY")
+    st.image("assets/pic/hh-data-story/survey-hierarchy.png", caption="Survey Hierarchy")
+
+with ic2:
+    st.image("assets/pic/hh-data-story/experiment.png", caption="Experiment Bihar Data")
+    st.image("assets/pic/hh-data-story/item-code-level.png", caption="What is the issues")
+
     
 st.write('---')
 st.subheader("Survey Identification")
