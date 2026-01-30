@@ -1,9 +1,10 @@
+import time
 import numpy as np
 import pandas as pd
 import polars as pl
 import plotly.express as px
 import streamlit as st
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 
@@ -35,14 +36,20 @@ def correlation_df(df, pca_features):
 
 @st.cache_resource
 def apply_pca(df, n_components=10):
-    X = df[pca_features].fill_null(0)
-    
+    X = (
+        df
+        .select(pca_features)
+        .fill_null(0)
+        .to_numpy()
+    )
+        
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     
     pca = PCA(n_components)
     X_pca = pca.fit_transform(X_scaled)
-    return pca, X_pca
+    X_pca_scaled = MinMaxScaler().fit_transform(X_pca)
+    return pca, X_pca, X_pca_scaled
 
 def explained_df_on_pca(pca):
     return pd.DataFrame({
@@ -125,10 +132,10 @@ def education_pca_3d(X_pca, df):
     return pca_df_3d, fig
 
 @st.cache_resource
-def cluster_and_pca_on_overall_data(X_pca, pca_df_3d):
+def cluster_and_pca_on_overall_data(X_pca_scaled, pca_df_3d, n_clusters=6):
     
-    kmeans = KMeans(n_clusters=6, random_state=42)
-    clusters = kmeans.fit_predict(X_pca[:, :3])
+    kmeans = KMeans(n_clusters, random_state=42, n_init="auto")
+    clusters = kmeans.fit_predict(X_pca_scaled[:, :3])
 
     pca_df_3d["Cluster"] = clusters
     
@@ -157,3 +164,30 @@ def cluster_and_pca_on_overall_data(X_pca, pca_df_3d):
     )
 
     return fig
+
+def loading_animation_pca_time():
+    with st.status("Model training, Cluster and PCA are working", expanded=True) as status:
+        st.toast("Please wait ...", icon="⌛")
+        st.write("Searching for data...")
+        time.sleep(2)
+        st.write("Feature Selection")
+        time.sleep(2)
+        st.write("Correlation and Graphs")
+        time.sleep(2)
+        st.write("Apply PCA")
+        st.toast("Your `no. of components` applied.")
+        time.sleep(4)
+        st.write("Plot Elbow Graph")
+        time.sleep(3)
+        st.write("PCA on Gender graphs completed")
+        time.sleep(2)
+        st.write("PCA on Education graphs completed")
+        time.sleep(2)
+        st.write("KMeans Cluster performing....")
+        st.toast("Your `no of cluster` applied.")
+        time.sleep(5)
+        st.write("Showing everything...")
+        time.sleep(3)
+        status.update(
+            label="🎉 Graphs Ready!", state="complete", expanded=False
+        )

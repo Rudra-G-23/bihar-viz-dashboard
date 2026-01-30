@@ -1,8 +1,6 @@
 import streamlit as st
 from pathlib import Path
 
-SOLUTION_PDF_PATH = Path("reports/how-to-merge-solution.pdf")
-
 st.set_page_config(
     initial_sidebar_state=True,
     page_icon="🧑‍🔬",
@@ -12,15 +10,21 @@ st.set_page_config(
 
 st.title("Bihar In-Depth Analysis Dashboard")
 
-with open(SOLUTION_PDF_PATH, "rb") as f:
-    pdf_bytes = f.read()
+SOLUTION_PDF_PATH = Path("reports/how-to-merge-solution.pdf")
 
-st.download_button(
-    label="📄 Open PDF",
-    data=pdf_bytes,
-    file_name="How to Merge Whole HCES DATA.pdf",
-    mime="application/pdf"
-)
+if not SOLUTION_PDF_PATH.exists():
+    st.error(f"PDF not found at {SOLUTION_PDF_PATH.resolve()}")
+else:
+    with open(SOLUTION_PDF_PATH, "rb") as f:
+        pdf_bytes = f.read()
+
+    st.download_button(
+        label="📄 Open PDF",
+        data=pdf_bytes,
+        file_name="How_to_Merge_Whole_HCES_DATA.pdf",
+        mime="application/pdf" 
+    )
+
 
 st.image("assets/pic/household-level.png", caption="Household Level Data and Person Level Data")
 st.image("assets/pic/item-level.png", caption="Item Level Data")

@@ -330,25 +330,31 @@ def pca_2d_graph(pca_df):
         y="PC2",
         color="cluster",
         hover_name="category_mapped",
-        hover_data=["category_mapped"],
+        hover_data="category_mapped",
         title="Category Clustering after PCA",
         color_continuous_scale='Bluered_r'
     )
 
 def loading_status_for_pca():
     with st.status("Train the model", expanded=True) as status:
-        st.info("n_components=2, n_clusters=2", icon="ℹ️")
+        st.info("""n_components=2, n_clusters=2 \n
+                No of components for 2 axis PC1 & PC2 
+                No of cluster means all the items \n
+                We Can be divided into two parts 
+                Like 1.Easy to access 2.Not easy to access
+                or 1. More used 2. Less used etc.
+                """, icon="ℹ️")
         
         st.write("Searching for data...")
-        time.sleep(3)
+        time.sleep(5)
         st.write("converted Polar to Pandas dataframe")
-        time.sleep(2)
+        time.sleep(3)
         st.write("Apply Standard Scaler Processing...")
-        time.sleep(2)
+        time.sleep(3)
         st.write("KMeans & PCA performing ...")
-        time.sleep(2)
-        st.write("Downloading dataset...")
-        time.sleep(2)
+        time.sleep(5)
+        st.write("Showing Graphs...")
+        time.sleep(3)
         status.update(
-            label="Model Training complete!", state="complete", expanded=False
+            label=" 🎉Showing Graphs complete!", state="complete", expanded=False
         )

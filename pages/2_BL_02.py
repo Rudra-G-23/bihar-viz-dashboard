@@ -14,6 +14,7 @@ from app.l02_functions import (
     pca_gender_2d_graphs,
     education_pca_3d,
     cluster_and_pca_on_overall_data,
+    loading_animation_pca_time,
 )
 
 path = Path("data") / "BL02.parquet"
@@ -95,7 +96,6 @@ with tab1:
     with st.expander("Dataframe"):
         st.subheader("Dataframe")
         st.dataframe(fdf.head(20))
-
 
 with tab2:
     with st.spinner("Year of Education Loading..."): 
@@ -261,41 +261,50 @@ with tab8:
 
 with tab9:
     st.subheader("PCA")
-    with st.expander("PCA contains features "):
-        st.dataframe(df[pca_features].describe())
+    op1, op2 = st.columns(2, gap="large")
+    with op1:
+        n_components = st.slider("How components you want", 0,10, 10)
+    with op2:
+        n_clusters = st.slider("Cluster Size", 0, 10, 6)
+    
+    if st.button("Show PCA & Cluster"):
+        loading_animation_pca_time()
         
-    with st.expander("Correlation graph"):
-        t9_c1, t9_c2 = st.columns(2)
-        corr_df, fig = correlation_df(df, pca_features)
-        with t9_c1:
-            st.plotly_chart(fig)
-        with t9_c2:
-            st.dataframe(corr_df)
+        with st.expander("PCA contains features "):
+            st.dataframe(df[pca_features].describe())
             
-    with st.expander("Elbow graph"):
-        t9_c1, t9_c2 = st.columns(2)       
-        pca, X_pca = apply_pca(df, n_components=10)
-        with t9_c1:
-            explained_df = explained_df_on_pca(pca)
-            st.dataframe(explained_df)
-        with t9_c2:
-            fig = cumulative_explained_variance_graph(explained_df)
-            st.plotly_chart(fig)
+        with st.expander("Correlation graph"):
+            t9_c1, t9_c2 = st.columns(2)
+            corr_df, fig = correlation_df(df, pca_features)
+            with t9_c1:
+                st.plotly_chart(fig)
+            with t9_c2:
+                st.dataframe(corr_df)
+                
+        with st.expander("Elbow graph"):
+            t9_c1, t9_c2 = st.columns(2)       
+            pca, X_pca, X_pca_scaled = apply_pca(df, n_components=n_components)
+            with t9_c1:
+                explained_df = explained_df_on_pca(pca)
+                st.dataframe(explained_df)
+            with t9_c2:
+                fig = cumulative_explained_variance_graph(explained_df)
+                st.plotly_chart(fig)
 
-    with st.expander("PCA Components & Graphs", expanded=True):
-        t91, t92, t93 = st.tabs(["PCA on Education", "PCA on Gender", "Loading Dataframe" ])
-        with t91:
-            pca_df_3d, fig = education_pca_3d(X_pca, df)
+        with st.expander("PCA Components & Graphs", expanded=True):
+            t91, t92, t93 = st.tabs(["PCA on Education", "PCA on Gender", "Loading Dataframe" ])
+            with t91:
+                pca_df_3d, fig = education_pca_3d(X_pca, df)
+                st.plotly_chart(fig)
+            with t92:
+                fig = pca_gender_2d_graphs(X_pca, df)
+                st.plotly_chart(fig)
+            with t93:
+                loadings = loadings_df(pca)
+                st.dataframe(loadings)
+                            
+        with st.expander("KMeans Clustering + PCA + Scatter Plot", expanded=True):
+            fig = cluster_and_pca_on_overall_data(X_pca_scaled, pca_df_3d, n_clusters=n_clusters)
             st.plotly_chart(fig)
-        with t92:
-            fig = pca_gender_2d_graphs(X_pca, df)
-            st.plotly_chart(fig)
-        with t93:
-            loadings = loadings_df(pca)
-            st.dataframe(loadings)
-                          
-    with st.expander("KMeans Clustering + PCA + Scatter Plot", expanded=True):
-        fig = cluster_and_pca_on_overall_data(X_pca, pca_df_3d)
-        st.plotly_chart(fig)
-        
+            
 
